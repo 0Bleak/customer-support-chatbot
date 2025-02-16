@@ -4,7 +4,7 @@
 #include <curl/curl.h>
 #include <cjson/cJSON.h>
 
-// Singleton API Handler
+
 typedef struct {
     CURL *curl;
 } APIHandler;
@@ -27,7 +27,6 @@ APIHandler *get_api_handler() {
     return instance;
 }
 
-// Callback function to handle API response
 size_t write_callback(void *ptr, size_t size, size_t nmemb, void *userdata) {
     size_t total_size = size * nmemb;
     char **response = (char **)userdata;
@@ -39,7 +38,6 @@ size_t write_callback(void *ptr, size_t size, size_t nmemb, void *userdata) {
     return total_size;
 }
 
-// Adapter Pattern: Parse JSON response
 char *parse_json_response(const char *json_str, const char *service) {
     cJSON *json = cJSON_Parse(json_str);
     if (!json) {
@@ -73,7 +71,6 @@ char *parse_json_response(const char *json_str, const char *service) {
     return result;
 }
 
-// Factory Pattern: Create API URL based on input
 char *create_api_url(const char *service, const char *query) {
     char *url = (char *)malloc(256 * sizeof(char));
     if (strcmp(service, "crm") == 0) {
@@ -89,7 +86,7 @@ char *create_api_url(const char *service, const char *query) {
     return url;
 }
 
-// Scatter-Gather Pattern: Query multiple services
+
 void scatter_gather(const char *query) {
     APIHandler *handler = get_api_handler();
     char *services[] = {"crm", "ticketing", "faq"};
@@ -123,7 +120,7 @@ void scatter_gather(const char *query) {
         printf("Would you like to speak to a human agent? (yes/no): ");
         char choice[10];
         fgets(choice, 10, stdin);
-        choice[strcspn(choice, "\n")] = 0; // Remove newline
+        choice[strcspn(choice, "\n")] = 0; 
         if (strcmp(choice, "yes") == 0) {
             printf("Your request has been forwarded to a human agent. They will contact you shortly.\n");
         } else {
@@ -138,7 +135,7 @@ int main() {
     while (1) {
         printf("Enter your query (or 'exit' to quit): ");
         fgets(input, 256, stdin);
-        input[strcspn(input, "\n")] = 0; // Remove newline
+        input[strcspn(input, "\n")] = 0; 
         if (strcmp(input, "exit") == 0) break;
         scatter_gather(input);
     }
